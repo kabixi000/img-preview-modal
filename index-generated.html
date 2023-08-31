@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>img-preview-modal</title>
+    <style>
+      #modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        z-index: 100;
+      }
+      #modal img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-height: 100%;
+        max-width: 100%;
+        z-index: 110;
+      }
+      #modal button, #modal select {
+        position: relative;
+        z-index: 120;
+      }
+    </style>
+  </head>
+  <body>
+    <img id="fox" class="preview-target" src="https://placehold.jp/320x213.png" width="320" height="213" alt="fox" />
+    <img id="reindeer" class="preview-target" src="https://placehold.jp/320x213.png" width="320" height="213" alt="reindeer" />
+    
+    <div id="modal">
+      <img id="modalImg" data-scale="1" draggable="false" />
+      <button id="reset">100%</button>
+      <select name="rendering-algorithm" id="rendering-algorithm">
+        <option value="auto">スムーズ(自動)</option>
+        <option value="smooth">スムーズ</option>
+        <option value="high-quality">高品質</option>
+        <option value="crisp-edges">鮮明</option>
+        <option value="pixelated">ニアレストネイバー</option>
+      </select>
+    </div>
+
+    <script>
+      const imgElements = document.getElementsByClassName('preview-target')
+      const modal = document.getElementById('modal')
+      const modalImg = document.getElementById('modalImg')
+      const resetBtn = document.getElementById('reset')
+      const renderingAlgorithmSelect = document.getElementById('rendering-algorithm')
+
+      // モーダル画像にスケールを適用する
+      const applyScale = () => {
+        const transform = getComputedStyle(modalImg).transform;
+        const matrix = transform.match(/(-?[0-9\.]+)/g);
+        const tx = parseFloat(matrix[4]);
+        const ty = parseFloat(matrix[5]);
+        modalImg.style.transform = `translate(${tx}px, ${ty}px) scale(${modalImg.dataset.scale})`;
+      }
+
+      // preview-target というクラスを付与した画像にクリックしたときに そのsrcをモーダルのimg.srcに送るクリックイベントを追加
+      Array.from(imgElements).forEach((img)=>{
+        img.addEventListener('click', ()=>{
+          modalImg.src = img.src
+          modal.style.display = 'block'
+        })
+      })
+
+      modal.addEventListener('click', (event)=>{
+        if(event.target === modal){
+          modalImg.src = ''
+          modalImg.dataset.scale = '1'
+          modalImg.style.transform = `translate(-50%, -50%)`
+          applyScale()
+          modal.style.display = 'none'
+        }
+      })
+
+      modalImg.addEventListener('click', (e)=>{
+        e.preventDefault()
+      })
+
+      // スクロールアップでモーダル画像ズームイン
+      // スクロールダウンでモーダル画像ズームアウト
+      modalImg.addEventListener('wheel', (event)=>{
+        const scale = Number(modalImg.dataset.scale);
+        if(event.deltaY > 0){
+          modalImg.dataset.scale = String(scale / 1.1);
+        } else if(event.deltaY < 0){
+          modalImg.dataset.scale = String(scale * 1.1);
+        }
+        applyScale();
+      });
+
+      // 100%ボタンの動作
+      resetBtn.addEventListener('click', ()=>{
+        modalImg.dataset.scale = 1
+        applyScale()
+      })
+
+      let dragging = false;
+      let previousX = 0;
+      let previousY = 0;
+
+      // ドラッグ開始
+      modalImg.addEventListener('mousedown', (event) => {
+        dragging = true;
+        previousX = event.clientX;
+        previousY = event.clientY;
+      });
+
+      // ドラッグ中の処理
+      modalImg.addEventListener('mousemove', (event) => {
+        if (!dragging) return;
+        const dx = event.clientX - previousX;
+        const dy = event.clientY - previousY;
+
+        // translateの値を取得
+        const transform = getComputedStyle(modalImg).transform;
+        const matrix = transform.match(/(-?[0-9\.]+)/g);
+        const tx = parseFloat(matrix[4]);
+        const ty = parseFloat(matrix[5]);
+
+        // translateの値を更新
+        modalImg.style.transform = `translate(${tx + dx}px, ${ty + dy}px) scale(${modalImg.dataset.scale})`;
+        previousX = event.clientX;
+        previousY = event.clientY;
+      });
+
+      // ドラッグ終了
+      modalImg.addEventListener('mouseup', () => {
+        dragging = false;
+      });
+
+      modalImg.addEventListener('mouseleave', () => {
+        dragging = false;
+      });
+
+      // 画像レンダリングアルゴリズム変更処理
+      renderingAlgorithmSelect.addEventListener('change', (event)=>{
+        modalImg.style.imageRendering = event.target.value
+      })
+    </script>
+  </body>
+</html>
