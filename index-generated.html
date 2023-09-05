@@ -3,6 +3,12 @@
   <head>
     <title>img-preview-modal</title>
     <style>
+      body {
+        background-color: rgb(79, 79, 79);
+      }
+      .imgs img {
+        display: block;
+      }
       #modal {
         display: none;
         position: fixed;
@@ -29,9 +35,11 @@
     </style>
   </head>
   <body>
-    <img id="fox" class="preview-target" src="https://placehold.jp/320x213.png" width="320" height="213" alt="fox" />
-    <img id="reindeer" class="preview-target" src="https://placehold.jp/320x213.png" width="320" height="213" alt="reindeer" />
-    
+    <div class="imgs">
+      <img id="fox" class="preview-target" src="https://placehold.jp/1f1f1f/141499/320x213.png" width="320" height="213" alt="fox" />
+      <img id="reindeer" class="preview-target" src="http://placehold.jp/1f1f1f/141499/320x180.png" width="320" height="180" alt="reindeer" />
+    </div>
+
     <div id="modal">
       <img id="modalImg" data-scale="1" draggable="false" />
       <button id="reset">100%</button>
