@@ -38,6 +38,7 @@
     <div class="imgs">
       <img id="fox" class="preview-target" src="https://placehold.jp/404040/141499/320x213.png?text=click" width="320" height="213" alt="fox" />
       <img id="reindeer" class="preview-target" src="http://placehold.jp/1f1f1f/141499/320x180.png?text=click" width="320" height="180" alt="reindeer" />
+      <img id="testImg" class="preview-target" src="assets/image/pixelcheck.png" width="640" height="320" alt="pixel check" />
     </div>
 
     <div id="modal">
@@ -128,7 +129,7 @@
 
       // 100%ボタンの動作
       resetBtn.addEventListener('click', ()=>{
-        modalImgScale = 1
+        modalImgScale = 1 / window.devicePixelRatio
         displacement.x = (window.innerWidth - parseFloat(getComputedStyle(modalImg).width))/2
         displacement.y = (window.innerHeight - parseFloat(getComputedStyle(modalImg).height))/2
         applyTransform()
