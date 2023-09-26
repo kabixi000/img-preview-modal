@@ -1,144 +1,31 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>img-preview-modal</title>
+    <title>img-preview-modal Demo</title>
     <style>
       body {
-        background-color: rgb(79, 79, 79);
+        background-color: rgb(62, 62, 62);
       }
-      .imgs img {
+      h1,h2,p {
+        color: rgb(207, 203, 203)
+      }
+      a {
+        color: rgb(188, 188, 236);
+      }
+      .blockImg {
         display: block;
-      }
-      #modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.8);
-        z-index: 100;
-      }
-      #modal img {
-        position: absolute;
-        transform-origin: 0px 0px;
-        transform: translate(0px, 0px) scale(1);
-        max-height: 100%;
-        max-width: 100%;
-        z-index: 110;
-        cursor: grab;
-      }
-      #modal button, #modal select {
-        position: relative;
-        z-index: 120;
       }
     </style>
   </head>
   <body>
-    <div class="imgs">
-      <img id="fox" class="preview-target" src="https://placehold.jp/404040/141499/320x213.png?text=click" width="320" height="213" alt="fox" />
-      <img id="reindeer" class="preview-target" src="http://placehold.jp/1f1f1f/141499/320x180.png?text=click" width="320" height="180" alt="reindeer" />
-      <img id="testImg" class="preview-target" src="assets/image/pixelcheck.png" width="640" height="320" alt="pixel check" />
-    </div>
-
-    <div id="modal">
-      <img id="modalImg" data-scale="1" draggable="false" />
-      <button id="reset">100%</button>
-      <select name="rendering-algorithm" id="rendering-algorithm">
-        <option value="auto">スムーズ(自動)</option>
-        <option value="smooth">スムーズ</option>
-        <option value="high-quality">高品質</option>
-        <option value="crisp-edges">鮮明</option>
-        <option value="pixelated">ニアレストネイバー</option>
-      </select>
-    </div>
-
-    <script>
-      const imgElements = document.getElementsByClassName('preview-target')
-      const modal = document.getElementById('modal')
-      const modalImg = document.getElementById('modalImg')
-      const resetBtn = document.getElementById('reset')
-      const renderingAlgorithmSelect = document.getElementById('rendering-algorithm')
-      let modalImgScale = 1
-      const displacement = {x:0,y:0}
-      let holding = false
-      const dragStart = {x:0,y:0}
-
-      // モーダル画像に移動とスケールを適用する関数
-      const applyTransform = () => {
-        modalImg.style.transform = `translate(${displacement.x}px, ${displacement.y}px) scale(${modalImgScale})`;
-      }
-
-      // preview-target というクラスを付与した画像をクリックしたときにそのsrcをモーダルのimg.srcに送るクリックイベントを追加
-      Array.from(imgElements).forEach((img)=>{
-        img.addEventListener('click', ()=>{
-          modalImg.src = img.src
-          modal.style.display = 'block'
-          displacement.x = (window.innerWidth - parseFloat(getComputedStyle(modalImg).width))/2
-          displacement.y = (window.innerHeight - parseFloat(getComputedStyle(modalImg).height))/2
-          applyTransform()
-        })
-      })
-
-      // モーダルを閉じる
-      modal.addEventListener('click', (event)=>{
-        if(event.target === modal){
-          modalImgScale = 1
-          applyTransform()
-          modal.style.display = 'none'
-        }
-      })
-
-      // モーダル画像のクリック時
-      modalImg.addEventListener('mousedown', (event)=>{
-        event.preventDefault()
-        dragStart.x = event.clientX - displacement.x
-        dragStart.y = event.clientY - displacement.y
-        holding = true
-      })
-
-      // クリックをやめたとき
-      modalImg.addEventListener('mouseup', (event)=>{
-        event.preventDefault()
-        holding = false
-      })
-
-      // ドラッグしているとき(マウスを動かしているときに条件をつけてドラッグを判断)
-      modalImg.addEventListener('mousemove', (event)=>{
-        event.preventDefault()
-        if(!holding){ return }
-        displacement.x = event.clientX - dragStart.x
-        displacement.y = event.clientY - dragStart.y
-        applyTransform()
-      })
-
-      // スクロールアップでモーダル画像ズームイン
-      // スクロールダウンでモーダル画像ズームアウト
-      modalImg.addEventListener('wheel', (event)=>{
-        const preZoomCursorPosX = (event.clientX - displacement.x) / modalImgScale
-        const preZoomCursorPosY = (event.clientY - displacement.y) / modalImgScale
-        if(event.deltaY > 0){
-          modalImgScale /= 1.1
-        } else if(event.deltaY < 0){
-          modalImgScale *= 1.1
-        }
-        displacement.x = event.clientX - preZoomCursorPosX * modalImgScale
-        displacement.y = event.clientY - preZoomCursorPosY * modalImgScale
-        applyTransform()
-      })
-
-      // 100%ボタンの動作
-      resetBtn.addEventListener('click', ()=>{
-        modalImgScale = 1 / window.devicePixelRatio
-        displacement.x = (window.innerWidth - parseFloat(getComputedStyle(modalImg).width))/2
-        displacement.y = (window.innerHeight - parseFloat(getComputedStyle(modalImg).height))/2
-        applyTransform()
-      })
-
-      // // 画像レンダリングアルゴリズム変更処理
-      renderingAlgorithmSelect.addEventListener('change', (event)=>{
-        modalImg.style.imageRendering = event.target.value
-      })
-    </script>
+    <h2>img-preview-modal Demo</h2>
+    <p><a href="https://github.com/kabixi000/img-preview-modal">GitHub</a></p>
+    <p>placehold.jp test img</p>
+    <img class="blockImg preview-target" src="https://placehold.jp/D0D0D0/141499/320x213.png?text=click" width="320" height="213" alt="placehold.jp test img" />
+    <p>pixelcheck img</p>
+    <img id="testImg" class="blockImg preview-target" src="assets/image/pixelcheck.png" width="640" height="320" alt="pixel check" />
+    <p>fox img</p>
+    <img class="blockImg preview-target" src="https://upload.wikimedia.org/wikipedia/commons/0/03/Vulpes_vulpes_laying_in_snow.jpg" width="640" alt="fox" />
+    <script src="img-preview-modal.js" defer></script>
   </body>
 </html>
