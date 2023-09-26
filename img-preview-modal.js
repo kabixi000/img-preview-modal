@@ -63,6 +63,7 @@ const initImgPreviewModal = () => {
       modal.style.display = 'block'
       displacement.x = (window.innerWidth - parseFloat(getComputedStyle(modalImg).width))/2
       displacement.y = (window.innerHeight - parseFloat(getComputedStyle(modalImg).height))/2
+      document.body.style.overflow = 'hidden'
       applyTransform()
     })
   })
@@ -74,6 +75,7 @@ const initImgPreviewModal = () => {
       applyTransform()
       modal.style.display = 'none'
       holding = false
+      document.body.style.overflow = 'auto'
     }
   })
 
