@@ -57,15 +57,16 @@ const initImgPreviewModal = () => {
   }
 
   // preview-target というクラスを付与した画像をクリックしたときにそのsrcをモーダルのimg.srcに送るクリックイベントを追加
-  Array.from(imgElements).forEach((img)=>{
-    img.addEventListener('click', ()=>{
-      modalImg.src = img.src
+  document.body.addEventListener('click', (event)=>{
+    const target = event.target
+    if(target.classList.contains('preview-target')){
+      modalImg.src = target.src
       modal.style.display = 'block'
       displacement.x = (window.innerWidth - parseFloat(getComputedStyle(modalImg).width))/2
       displacement.y = (window.innerHeight - parseFloat(getComputedStyle(modalImg).height))/2
       document.body.style.overflow = 'hidden'
       applyTransform()
-    })
+    }
   })
 
   // モーダルを閉じる
